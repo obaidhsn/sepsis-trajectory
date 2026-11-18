@@ -1,0 +1,47 @@
+# Shared defaults. Experiment configs in configs/experiments/ inherit with `base:`.
+# Any value can be overridden from the CLI:  --override train.seed=1 model.hidden_dim=96
+
+paths:
+  raw_dir: data/raw
+  processed_dir: data/processed
+  results_dir: results
+
+data:
+  lookback: 24            # hours of history per window (ablation: 12 / 24 / 48)
+  horizon: 6              # forecast vitals at t+1 .. t+6
+  onset_edges: [6, 12, 24]  # buckets: <=6, 6-12, 12-24, >24 / never
+  windows_per_patient: 8  # training windows drawn per patient per epoch
+  septic_oversample: 4    # septic patients get 4x more windows
+  split_seed: 0           # fixed split; model seeds vary separately
+  min_prelabel_hours: 6   # septic patients eligible for warning-time analysis
+  use_static: true        # false = static/timeline features zeroed (input ablation)
+
+model:
+  name: transformer
+  hidden_dim: 64
+  n_layers: 2
+  n_heads: 4
+  dropout: 0.1
+
+train:
+  seed: 0
+  tasks: [vitals, risk, onset]   # ablation: single-task runs
+  epochs: 30
+  patience: 5
+  batch_size: 256
+  eval_batch_size: 1024
+  lr: 1.0e-3
+  weight_decay: 1.0e-4
+  grad_clip: 1.0
+  num_workers: 0
+  device: auto            # auto | cpu | cuda
+  loss:
+    lambda_vitals: 1.0
+    lambda_risk: 1.0
+    lambda_onset: 0.5
+    risk_pos_weight: 10.0
+    onset_class_weights: null
+
+eval:
+  fixed_false_alarm_rate: 1.0   # alarm-hours per non-septic patient-day
+  bootstrap_samples: 1000

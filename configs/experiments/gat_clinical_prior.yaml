@@ -1,0 +1,4 @@
+# Ablation (i): graph type = clinical_prior
+base: gat_transformer.yaml
+model:
+  graph: clinical_prior

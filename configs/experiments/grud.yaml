@@ -1,0 +1,4 @@
+base: ../default.yaml
+model:
+  name: grud
+  hidden_dim: 64

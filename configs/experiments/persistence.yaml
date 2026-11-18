@@ -1,0 +1,5 @@
+base: ../default.yaml
+model:
+  name: persistence
+train:
+  tasks: [vitals]

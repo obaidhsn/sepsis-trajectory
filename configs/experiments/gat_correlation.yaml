@@ -1,0 +1,4 @@
+# Ablation (i): graph type = correlation
+base: gat_transformer.yaml
+model:
+  graph: correlation

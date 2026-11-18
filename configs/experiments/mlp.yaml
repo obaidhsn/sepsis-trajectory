@@ -1,0 +1,4 @@
+base: ../default.yaml
+model:
+  name: mlp
+  hidden_dim: 128

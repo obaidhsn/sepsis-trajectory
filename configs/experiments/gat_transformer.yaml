@@ -1,0 +1,8 @@
+# Proposed model. graph: learned | clinical_prior | correlation | none
+base: ../default.yaml
+model:
+  name: gat_transformer
+  hidden_dim: 64
+  gat_layers: 2
+  gat_heads: 4
+  graph: learned

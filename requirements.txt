@@ -1,0 +1,18 @@
+# Core
+numpy>=1.24
+pandas>=2.0
+scikit-learn>=1.3
+pyyaml>=6.0
+tqdm>=4.65
+torch>=2.1
+
+# Optional: only needed if you switch the GAT branch to PyTorch Geometric
+# (the default implementation is a dense GAT in plain PyTorch, see docs/methodology.md)
+# torch-geometric>=2.4
+
+# Analysis / plots
+matplotlib>=3.7
+jupyter>=1.0
+
+# Tests
+pytest>=7.4

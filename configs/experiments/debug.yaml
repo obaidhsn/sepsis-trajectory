@@ -1,0 +1,8 @@
+# Tiny, fast run for checking the pipeline end to end (synthetic or --limit data).
+base: gat_transformer.yaml
+data:
+  windows_per_patient: 2
+train:
+  epochs: 2
+  patience: 1
+  batch_size: 64
