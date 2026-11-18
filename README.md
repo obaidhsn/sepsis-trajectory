@@ -1,6 +1,5 @@
 # Predicting Sepsis Deterioration Trajectories
 
-Code for our AI651 (Deep Learning for Time, Space, and Graphs, Fall 2026) course project:
 **a multi-task temporal and graph-based approach to sepsis early warning**.
 
 At every ICU hour *t* the model jointly predicts:
@@ -138,24 +137,3 @@ AUROC/AUPRC/Brier/ECE for risk, MAE/RMSE per vital and per horizon for forecasts
 the official Challenge utility score, warning hours, detection rate and false alarms per patient-day.
 Alarm thresholds are chosen on validation and frozen. Comparisons use a patient-level bootstrap.
 Details: [docs/evaluation.md](docs/evaluation.md).
-
-## Project timeline
-
-| Milestone | Deadline |
-|---|---|
-| Proposal | Nov 13, 2026 ✓ |
-| Mid-project update (data prep, baselines, preliminary results) | **Nov 30, 2026** |
-| Final report (≤5 pages) + code + reproduction instructions | **Dec 22, 2026** |
-| Presentations + viva | Dec 25–26, 2026 |
-
-Plan, owners and open decisions: [docs/project_plan.md](docs/project_plan.md).
-
-## Status
-
-- [x] Code skeleton, configs, tests on synthetic data
-- [x] Download and preprocess real data (cohort statistics in `data/processed/profile.json`, `docs/data.md`)
-- [x] Verify `utility.py` against the official `evaluate_sepsis_score.py` (`scripts/verify_utility.py`)
-- [x] Baselines trained (persistence, linear, MLP, GRU-D, Transformer), 3 seeds
-- [x] GAT + Transformer trained, graph ablations, 3 seeds, test_A and test_B, bootstrap comparisons
-  (results and findings: [docs/results.md](docs/results.md); code changes: [CHANGELOG.md](CHANGELOG.md))
-- [ ] Remaining ablations, external test, analysis of attention before onset
