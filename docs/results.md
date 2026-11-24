@@ -1,4 +1,101 @@
-# Results: first full run (2026-11-18)
+# Results
+
+Three rounds of experiments so far, newest first. All use PhysioNet 2019 with the same split: Hospital A
+70/15/15 by patient (train / val / test_A), and Hospital B (test_B) never used for training, early stopping
+or threshold selection.
+
+| Run | Date | Protocol | Seeds | Models | Details |
+|---|---|---|---|---|---|
+| 3 | 2026-11-25 | per-task selection, weighted onset loss, input clipping | 0 | Transformer, GAT + Transformer | [results/per_task/RESULTS.md](../results/per_task/RESULTS.md) |
+| 2 | 2026-11-24 | one checkpoint on val AUPRC | 0 | all 10 incl. Informer, Autoformer | [results/RESULTS.md](../results/RESULTS.md) |
+| 1 | 2026-11-18 | one checkpoint on val AUPRC | 0, 1, 2 | 9 incl. `gat_none`, with bootstrap | below |
+
+## Run 3 (2026-11-25): per-task selection and onset fix
+
+What changed (details in `docs/methodology.md`):
+
+1. **Model selection.** Each head (risk, vitals, onset) is taken from the epoch with its own best validation
+   score (AUPRC, MAE, macro-F1). Training stops only when no head has improved by more than 0.001 for 5
+   epochs. Before, one checkpoint was chosen on AUPRC alone, which froze every head at epoch 1–6.
+2. **Onset loss** is class-weighted with balanced inverse bucket frequencies, computed from the training
+   windows (weights 2.35 / 6.61 / 6.08 / 0.31).
+3. **Input clipping** to the training range. Hospital B has data-entry errors (an FiO2 value 21,554 standard
+   deviations from the mean) that made the GAT model forecast blood pressures of about 25,000.
+
+Seed 0, Apple M2 (MPS). Vitals MAE in clinical units. Utility@1FA = utility at one false-alarm hour per
+non-septic patient-day. Onset error = expected hours-to-onset error on septic hours.
+
+| Model | Split | Heads from epoch (risk/vitals/onset) | AUROC | AUPRC | ECE | Utility | FA h/pt-day | Utility@1FA | Detect@1FA | Onset macro-F1 | Onset error (h) | Vitals MAE |
+|---|---|:-:|--:|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Transformer | test_A | 24 / 29 / 27 | 0.737 | 0.064 | 0.064 | 0.243 | 1.88 | 0.199 | 0.773 | 0.283 | 16.5 | 5.919 |
+| GAT + Transformer | test_A | 1 / 17 / 17 | 0.769 | 0.064 | 0.291 | 0.345 | 4.33 | 0.180 | 0.725 | 0.282 | 14.5 | 5.926 |
+| Transformer | test_B | | 0.700 | 0.042 | 0.059 | 0.155 | 2.32 | 0.148 | 0.839 | 0.271 | 17.2 | 6.638 |
+| GAT + Transformer | test_B | | 0.785 | 0.061 | 0.221 | 0.242 | 2.33 | 0.154 | 0.507 | 0.268 | 15.4 | 6.675 |
+
+### Did the fixes improve the results?
+
+Compared with the same models under the old protocol: run 2 (same seed) and run 1 (mean of 3 seeds).
+
+| Metric (test_A unless noted) | Transformer: run 1 / run 2 → run 3 | GAT + Transformer: run 1 / run 2 → run 3 | Better? |
+|---|---|---|---|
+| Vitals MAE | 6.135 / 6.045 → **5.919** | 6.244 / 6.130 → **5.926** | **Yes, both** |
+| Vitals MAE, test_B | 6.890 / 6.699 → **6.638** | 7.174 / 7.051 → **6.675** | **Yes, both** |
+| Onset macro-F1 | 0.258 / 0.267 → **0.283** | 0.251 / 0.251 → **0.282** | **Yes, modest** |
+| Onset error, septic hours (h) | – / 19.0 → **16.5** | – / 19.2 → **14.5** | **Yes** |
+| Risk calibration (ECE) | – / 0.119 → **0.064** | – / 0.142 → 0.291 | Transformer yes, GAT no |
+| False-alarm h per pt-day at max utility | – / 5.38 → **1.88** | – / 4.35 → 4.33 | Transformer yes |
+| AUROC | 0.757 / 0.755 → 0.737 | 0.763 / 0.760 → **0.769** | Transformer worse, GAT ~same |
+| AUROC, test_B | 0.738 / 0.730 → 0.700 | 0.743 / 0.730 → **0.785** | Transformer worse, GAT better |
+| AUPRC | 0.063 / 0.064 → 0.064 | 0.058 / 0.060 → 0.064 | Same |
+| Utility (max) | 0.310 / 0.306 → 0.243 | 0.333 / 0.323 → **0.345** | Transformer worse, GAT ~same |
+| Utility@1FA | 0.179 / 0.207 → 0.199 | 0.113 / 0.167 → 0.180 | ~Same |
+
+**Summary.**
+
+- **Vitals and onset forecasts improved.** This is what the fix targeted, and it holds for both models on
+  both hospitals.
+  - The Hospital A vitals error is now lower than in any earlier Transformer or GAT run and lower than
+    the linear baseline (5.96–5.97).
+  - GRU-D under the old protocol (5.80–5.82) is still the best forecaster and has not been re-run yet.
+- **The onset head is fixed but still weak.**
+  - It no longer predicts only ">24 h / never", and its per-bucket one-vs-rest AUROC is 0.75–0.77.
+  - Among septic patients it still separates neighbouring buckets at close to chance (balanced
+    accuracy about 0.26).
+- **Risk prediction did not improve overall. It now depends on which epoch the risk head is taken from.**
+  - The Transformer's risk head now comes from epoch 24. It is much better calibrated and raises a third
+    of the false alarms, but its AUROC and max-utility score fell.
+  - The GAT model's risk head still comes from epoch 1. Its Hospital B gains (AUROC 0.785, AUPRC 0.061)
+    are the best numbers so far, but they match what the fixed-graph GATs already reached at epoch 1 in
+    run 2 (0.772 / 0.054). They are not a result of the fix.
+  - Validation AUPRC moves by about ±0.005 between epochs, so choosing the risk epoch on it is noisy.
+- **On the research question nothing has changed yet.**
+  - With these fixes the GAT and the parameter-matched Transformer forecast equally well (5.926 vs 5.919).
+  - Their risk results differ mainly because of the epoch each risk head was taken from.
+  - Run 1 found that a GAT without edges (`gat_none`) does as well as any graph.
+  - A claim needs 3 seeds under the new protocol, `gat_none`, and the bootstrap.
+
+**Next.**
+
+- Re-run all models with the new protocol and 3 seeds. Raise `train.epochs` to 50, because the
+  Transformer hit the 30-epoch cap with its vitals still improving.
+- Restore `gat_none` and the bootstrap scripts from commit 6320dbd.
+- Consider a less noisy risk selection rule, for example AUPRC smoothed over neighbouring epochs, or
+  validation risk loss.
+- Try an ordinal or regression target for time to onset.
+
+## Run 2 (2026-11-24): mid-project evaluation
+
+All ten models, seed 0, old protocol. Tables and observations are in
+[results/RESULTS.md](../results/RESULTS.md). It added Informer and Autoformer. Autoformer and GRU-D were the
+best forecasters (MAE 5.93 / 5.80 on test_A); the fixed-graph GATs had the highest AUROC (0.777 / 0.776).
+Its Transformer and GAT + Transformer rows are superseded by run 3.
+
+## Run 1 (2026-11-18): first full run, 3 seeds
+
+> Old protocol (one checkpoint on validation AUPRC). The scripts referenced below (`run_all.sh`,
+> `verify_utility.py`, `bootstrap_compare.py`), the `gat_none` config and these result files were removed in
+> commit 9cc0b62 and are only in the git history (commit 6320dbd). The "Suggested next steps" at the end
+> are kept as written; the first one (decouple early stopping from AUPRC) is done in run 3.
 
 All nine experiments in `configs/experiments/` were trained on the real PhysioNet 2019 data with seeds 0, 1
 and 2, using the configs exactly as committed (`configs/default.yaml`). Numbers are mean ± std over the three
@@ -26,7 +123,7 @@ bash scripts/run_all.sh              # 9 experiments × 3 seeds, about 70 min on
 python scripts/bootstrap_compare.py  # about 35 min on CPU, most of it Hospital B
 ```
 
-## Hardware and run size
+### Hardware and run size
 
 One NVIDIA RTX 4060 Laptop GPU (8 GB), 16 CPU threads, 16 GB RAM. With the default settings an epoch draws
 about 150k training windows and takes 8 to 16 s, plus about 4 s for validation over every hour of the
@@ -35,7 +132,7 @@ whole 27-run grid took 70 min. Data loading is single-process (`num_workers: 0`)
 already holds about 3 GB of RAM, and the machine had about 4 GB free. The configs were not scaled down:
 the runs are small enough for this machine as they are.
 
-## Test A (held-out patients, same hospital)
+### Test A (held-out patients, same hospital)
 
 | Model | Params | AUROC | AUPRC | Utility | Detection | Utility @ 1 FA/day | Onset macro-F1 | Vitals MAE |
 |---|---:|---|---|---|---|---|---|---|
@@ -49,7 +146,7 @@ the runs are small enough for this machine as they are.
 | gat_correlation | 159,855 | **0.763 ± 0.012** | 0.062 ± 0.003 | **0.335 ± 0.022** | 0.923 | 0.159 ± 0.063 | 0.256 | 6.220 ± 0.175 |
 | gat_none | 159,855 | 0.759 ± 0.013 | **0.063 ± 0.003** | 0.323 ± 0.025 | 0.897 | **0.214 ± 0.058** | 0.256 | 6.188 ± 0.197 |
 
-## Test B (external hospital)
+### Test B (external hospital)
 
 | Model | AUROC | AUPRC | Utility | Detection | Utility @ 1 FA/day | Vitals MAE |
 |---|---|---|---|---|---|---|
@@ -71,7 +168,7 @@ validation. Vitals MAE is in clinical units over all seven vitals and six foreca
 Full columns (Brier, ECE, warning hours, false alarms per patient-day, RMSE, pre-onset MAE) are in
 `results/tables/summary_*.md`.
 
-## Paired bootstrap against the Transformer (3 seeds, 1,000 patient resamples)
+### Paired bootstrap against the Transformer (3 seeds, 1,000 patient resamples)
 
 Difference GAT variant − Transformer, 95% CI. Bold = CI excludes 0.
 
@@ -91,7 +188,7 @@ sampling noise but not seed-to-seed training noise. Seed noise is of the same si
 the AUROC std across seeds is 0.005 to 0.030), so a CI that excludes 0 on Hospital B is weaker evidence
 than it looks. Treat the mean ± std tables and the CIs together.
 
-## Key findings
+### Key findings
 
 1. **The GAT branch does not clearly help.** On test_A no GAT variant beats the parameter-matched Transformer on
    AUROC, AUPRC or utility once uncertainty is taken into account. The learned-graph model is slightly *worse*
@@ -121,7 +218,7 @@ For context, our validation utility (0.37 to 0.41) is in the range reported by t
 on their own cross-validation, but hourly AUROC (about 0.76 on test_A) is below the 0.80 to 0.85 typically
 reported for tuned gradient-boosting models on this dataset.
 
-## Suggested next steps
+### Suggested next steps
 
 - Decouple early stopping from AUPRC alone, for example monitor the validation total loss, or train the vitals
   head to convergence and select the risk checkpoint separately. Then re-run the forecasting comparison.

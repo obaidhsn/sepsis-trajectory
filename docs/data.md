@@ -16,7 +16,11 @@ Median stay is 38 h (39 h at A, 38 h at B).
 
 ## Getting the data
 
-We download from the Kaggle mirror
+**Option 1, PhysioNet directly (no account):** `SOURCE=physionet bash scripts/download_data.sh`. This lists
+the files on physionet.org and fetches the 40,336 files in parallel from PhysioNet's open S3 bucket (313 MB,
+a few minutes). Re-running it only fetches files that are missing.
+
+**Option 2, Kaggle mirror:** we originally downloaded from the Kaggle mirror
 [farjanayesmin/the-physionet-challenge-2019-dataset](https://www.kaggle.com/datasets/farjanayesmin/the-physionet-challenge-2019-dataset),
 which is faster than PhysioNet's per-file server.
 

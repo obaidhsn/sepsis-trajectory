@@ -1,0 +1,41 @@
+{
+  "experiment": "gat_transformer",
+  "seed": 0,
+  "config_file": "configs/experiments/gat_transformer.yaml",
+  "overrides": [
+    "paths.results_dir=results/per_task"
+  ],
+  "command": "python3 scripts/train.py --config configs/experiments/gat_transformer.yaml --seed 0 --name gat_transformer --override paths.results_dir=results/per_task",
+  "started_utc": "2026-11-24T19:54:29+00:00",
+  "device": "mps",
+  "gpu": null,
+  "torch": "2.9.0",
+  "numpy": "2.2.0",
+  "python": "3.13.13",
+  "onset_bucket_counts_train": [
+    15327,
+    5448,
+    5920,
+    117257
+  ],
+  "n_params": 159855,
+  "best_epoch": 1,
+  "epochs_run": 22,
+  "selection": "per_task",
+  "best_epoch_per_task": {
+    "risk": 1,
+    "vitals": 17,
+    "onset": 17
+  },
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.07141016721033022,
+  "train_seconds": 859.3,
+  "total_seconds": 979.2,
+  "finished_utc": "2026-11-24T20:37:05+00:00",
+  "re_evaluated": {
+    "command": "python3 scripts/train.py --config configs/experiments/gat_transformer.yaml --seed 0 --name gat_transformer --override paths.results_dir=results/per_task --eval-only",
+    "started_utc": "2026-11-24T20:34:56+00:00",
+    "device": "mps"
+  },
+  "inputs_clipped_to_train_range": 211773
+}

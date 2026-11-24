@@ -27,4 +27,9 @@ def evaluate_predictions(pred: dict, thresholds: dict | None = None, vital_std=N
                 pred["y_risk"], pred["pred_risk"], pred["patient"], pred["hour"], thr)
     if "pred_onset" in pred:
         out["onset"] = onset_metrics(pred["y_onset"], pred["pred_onset"])
+        if t_sepsis_by_patient is not None:
+            # time-to-alert quality where it matters: hours of patients who do become septic
+            sel = t_sepsis_by_patient[pred["patient"]] >= 0
+            if sel.any():
+                out["onset_septic"] = onset_metrics(pred["y_onset"][sel], pred["pred_onset"][sel])
     return out

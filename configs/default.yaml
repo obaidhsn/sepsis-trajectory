@@ -14,6 +14,7 @@ data:
   septic_oversample: 4    # septic patients get 4x more windows
   split_seed: 0           # fixed split; model seeds vary separately
   min_prelabel_hours: 6   # septic patients eligible for warning-time analysis
+  clip_inputs: true       # clip normalised inputs to the training range (guards against data-entry errors)
 
 model:
   name: transformer
@@ -26,20 +27,26 @@ train:
   seed: 0
   tasks: [vitals, risk, onset]   # ablation: single-task runs
   epochs: 30
+  # Model selection. per_task: each head (risk / vitals / onset) is taken from the epoch
+  # with its own best validation score (AUPRC / MAE / macro-F1), and training stops when
+  # no head has improved by more than min_delta for `patience` epochs.
+  # risk_auprc: the original protocol (one checkpoint, chosen on validation AUPRC).
+  selection: per_task
   patience: 5
+  min_delta: 0.001
   batch_size: 256
   eval_batch_size: 1024
   lr: 1.0e-3
   weight_decay: 1.0e-4
   grad_clip: 1.0
   num_workers: 0
-  device: auto            # auto | cpu | cuda
+  device: auto            # auto (cuda > mps > cpu) | cpu | cuda | mps
   loss:
     lambda_vitals: 1.0
     lambda_risk: 1.0
     lambda_onset: 0.5
     risk_pos_weight: 10.0
-    onset_class_weights: null
+    onset_class_weights: auto   # auto = balanced from training-window bucket counts | null | [w0, w1, w2, w3]
 
 eval:
   fixed_false_alarm_rate: 1.0   # alarm-hours per non-septic patient-day

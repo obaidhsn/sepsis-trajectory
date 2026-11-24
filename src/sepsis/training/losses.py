@@ -2,12 +2,27 @@
 
 L_vitals: MAE only on future values that were actually measured.
 L_risk:   class-weighted BCE (positive hours are ~1.8%).
-L_time:   cross-entropy over onset buckets (optionally class-weighted).
+L_time:   cross-entropy over onset buckets, class-weighted. With
+          `onset_class_weights: auto` the weights are inverse bucket frequencies
+          in the training windows (see `onset_class_weights_from_counts`);
+          without them the head collapses to the majority ">24 h / never" bucket.
 """
+
+import numpy as np
 
 import torch
 from torch import nn
 import torch.nn.functional as F
+
+
+def onset_class_weights_from_counts(counts) -> list[float]:
+    """Balanced weights n / (K * n_k), as in scikit-learn's class_weight='balanced'.
+
+    The weighted share of every bucket in the loss is then equal.
+    """
+    counts = np.asarray(counts, dtype=np.float64)
+    w = counts.sum() / (len(counts) * np.maximum(counts, 1.0))
+    return [float(x) for x in w]
 
 
 class MultiTaskLoss(nn.Module):
