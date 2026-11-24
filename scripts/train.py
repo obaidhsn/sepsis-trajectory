@@ -70,10 +70,6 @@ def main():
 
     patients, splits = load_processed(cfg["paths"]["processed_dir"])
     d = cfg["data"]
-    if not d.get("use_static", True):
-        # Input ablation: static/timeline features (Age, Gender, Unit, HospAdmTime, ICULOS) set to the train mean.
-        for rec in patients.values():
-            rec["s"] = np.zeros_like(rec["s"])
     adjacency = None
     if cfg["model"]["name"] == "gat_transformer":
         adjacency = build_adjacency(cfg["model"].get("graph", "learned"),

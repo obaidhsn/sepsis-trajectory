@@ -7,8 +7,8 @@ Re-implementation of the official `compute_utility` logic:
   * Penalty for missing the window after t_sepsis.
 Normalised so that "always predict 0" = 0 and the best possible = 1.
 
-Checked against the official evaluate_sepsis_score.py with
-scripts/verify_utility.py (scripts/download_data.sh fetches it into data/raw/).
+Checked against the official evaluate_sepsis_score.py
+(scripts/download_data.sh fetches it into data/raw/).
 
 `_patient_utility` is a line-by-line port of the official loop. The score
 itself is computed from per-hour utility tables (`hour_utilities`), which

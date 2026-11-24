@@ -1,0 +1,21 @@
+{
+  "experiment": "gat_transformer",
+  "seed": 0,
+  "config_file": "configs/experiments/gat_transformer.yaml",
+  "overrides": [],
+  "command": "python scripts/train.py --config configs/experiments/gat_transformer.yaml --seed 0 --name gat_transformer",
+  "started_utc": "2026-11-24T11:19:45+00:00",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.15.0+cu132",
+  "numpy": "2.5.5",
+  "python": "3.12.3",
+  "n_params": 159855,
+  "best_epoch": 4,
+  "epochs_run": 9,
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.0704337615807797,
+  "train_seconds": 198.5,
+  "total_seconds": 276.1,
+  "finished_utc": "2026-11-24T11:24:21+00:00"
+}

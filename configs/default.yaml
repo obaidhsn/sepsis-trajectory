@@ -14,7 +14,6 @@ data:
   septic_oversample: 4    # septic patients get 4x more windows
   split_seed: 0           # fixed split; model seeds vary separately
   min_prelabel_hours: 6   # septic patients eligible for warning-time analysis
-  use_static: true        # false = static/timeline features zeroed (input ablation)
 
 model:
   name: transformer
@@ -44,4 +43,3 @@ train:
 
 eval:
   fixed_false_alarm_rate: 1.0   # alarm-hours per non-septic patient-day
-  bootstrap_samples: 1000

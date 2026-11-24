@@ -1,0 +1,21 @@
+{
+  "experiment": "autoformer",
+  "seed": 0,
+  "config_file": "configs/experiments/autoformer.yaml",
+  "overrides": [],
+  "command": "python scripts/train.py --config configs/experiments/autoformer.yaml --seed 0 --name autoformer",
+  "started_utc": "2026-11-24T11:40:27+00:00",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.15.0+cu132",
+  "numpy": "2.5.5",
+  "python": "3.12.3",
+  "n_params": 168455,
+  "best_epoch": 3,
+  "epochs_run": 8,
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.07100679806410037,
+  "train_seconds": 279.9,
+  "total_seconds": 362.9,
+  "finished_utc": "2026-11-24T11:46:30+00:00"
+}

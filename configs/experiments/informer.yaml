@@ -1,0 +1,6 @@
+# Informer encoder (ProbSparse attention + distilling), same inputs and heads as the Transformer.
+base: ../default.yaml
+model:
+  name: informer
+  hidden_dim: 68
+  factor: 5

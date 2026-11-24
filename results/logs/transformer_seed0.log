@@ -1,0 +1,14 @@
+transformer: 165,575 trainable parameters on cuda
+epoch 1: loss=2.0118 val_auprc=0.0594 (21s)
+epoch 2: loss=1.7661 val_auprc=0.0524 (20s)
+epoch 3: loss=1.6210 val_auprc=0.0509 (19s)
+epoch 4: loss=1.4865 val_auprc=0.0589 (20s)
+epoch 5: loss=1.3826 val_auprc=0.0599 (20s)
+epoch 6: loss=1.3007 val_auprc=0.0650 (19s)
+epoch 7: loss=1.2265 val_auprc=0.0610 (19s)
+epoch 8: loss=1.1761 val_auprc=0.0604 (19s)
+epoch 9: loss=1.1248 val_auprc=0.0601 (19s)
+epoch 10: loss=1.0994 val_auprc=0.0534 (19s)
+epoch 11: loss=1.0712 val_auprc=0.0597 (19s)
+early stopping
+done in 300s -> results_mid_eval/transformer/seed0

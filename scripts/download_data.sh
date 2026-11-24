@@ -30,7 +30,7 @@ LEFT=$(find "$TMP" -type f -name '*.psv' | wc -l)
 [ "$LEFT" -eq 0 ] || echo "Warning: $LEFT .psv files did not match p0*/p1* and were left in $TMP"
 [ "$LEFT" -eq 0 ] && rm -rf "$TMP"
 
-# Official scorer, used to verify src/sepsis/evaluation/utility.py (scripts/verify_utility.py).
+# Official scorer, used to verify src/sepsis/evaluation/utility.py.
 # The PhysioNet file path returns 404, so the challenge's GitHub repository is the primary source.
 SCORER_URL=https://raw.githubusercontent.com/physionetchallenges/evaluation-2019/master/evaluate_sepsis_score.py
 curl -fsSL -o data/raw/evaluate_sepsis_score.py "$SCORER_URL" \

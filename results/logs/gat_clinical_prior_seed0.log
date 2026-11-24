@@ -1,0 +1,9 @@
+gat_clinical_prior: 159,855 trainable parameters on cuda
+epoch 1: loss=2.0204 val_auprc=0.0688 (22s)
+epoch 2: loss=1.7673 val_auprc=0.0671 (21s)
+epoch 3: loss=1.6140 val_auprc=0.0645 (22s)
+epoch 4: loss=1.4767 val_auprc=0.0603 (21s)
+epoch 5: loss=1.3795 val_auprc=0.0522 (21s)
+epoch 6: loss=1.3013 val_auprc=0.0645 (21s)
+early stopping
+done in 224s -> results_mid_eval/gat_clinical_prior/seed0

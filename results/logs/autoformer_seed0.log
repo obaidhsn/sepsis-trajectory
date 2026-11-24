@@ -1,0 +1,11 @@
+autoformer: 168,455 trainable parameters on cuda
+epoch 1: loss=2.0742 val_auprc=0.0565 (36s)
+epoch 2: loss=1.8847 val_auprc=0.0579 (32s)
+epoch 3: loss=1.8118 val_auprc=0.0710 (32s)
+epoch 4: loss=1.7516 val_auprc=0.0699 (33s)
+epoch 5: loss=1.6923 val_auprc=0.0605 (32s)
+epoch 6: loss=1.6455 val_auprc=0.0624 (34s)
+epoch 7: loss=1.6007 val_auprc=0.0592 (37s)
+epoch 8: loss=1.5511 val_auprc=0.0657 (35s)
+early stopping
+done in 363s -> results_mid_eval/autoformer/seed0

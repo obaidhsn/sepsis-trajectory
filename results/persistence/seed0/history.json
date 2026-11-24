@@ -1,0 +1,7 @@
+{
+  "monitor": null,
+  "best_val_monitor": null,
+  "best_epoch": 0,
+  "epochs_run": 0,
+  "history": []
+}

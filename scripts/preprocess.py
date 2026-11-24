@@ -2,7 +2,6 @@
 
     python scripts/preprocess.py                       # full data
     python scripts/preprocess.py --limit 500           # quick debug subset
-    python scripts/preprocess.py --raw data/synthetic --out data/processed_synthetic
 """
 import argparse
 

@@ -1,0 +1,21 @@
+{
+  "experiment": "grud",
+  "seed": 0,
+  "config_file": "configs/experiments/grud.yaml",
+  "overrides": [],
+  "command": "python scripts/train.py --config configs/experiments/grud.yaml --seed 0 --name grud",
+  "started_utc": "2026-11-24T11:09:40+00:00",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.15.0+cu132",
+  "numpy": "2.5.5",
+  "python": "3.12.3",
+  "n_params": 84689,
+  "best_epoch": 2,
+  "epochs_run": 7,
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06037129455418127,
+  "train_seconds": 210.0,
+  "total_seconds": 286.9,
+  "finished_utc": "2026-11-24T11:14:27+00:00"
+}

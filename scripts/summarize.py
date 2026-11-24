@@ -20,10 +20,9 @@ from sepsis.constants import VITALS
 from sepsis.utils import load_json
 
 SPLITS = ("val", "test_A", "test_B")
-# Display order; anything else found in results/ is appended after these.
-ORDER = ["persistence", "linear", "mlp", "grud", "transformer",
-         "gat_transformer", "gat_clinical_prior", "gat_correlation", "gat_none"]
-SKIP = {"debug"}
+# Display order; anything else found in the results folder is appended after these.
+ORDER = ["persistence", "linear", "mlp", "grud", "informer", "autoformer", "transformer",
+         "gat_transformer", "gat_clinical_prior", "gat_correlation"]
 
 # (column name, path in metrics.json[split], decimals)
 COLUMNS = [
@@ -61,8 +60,6 @@ def collect(results: Path):
     runs = []
     for f in sorted(results.glob("*/seed*/metrics.json")):
         exp = f.parent.parent.name
-        if exp in SKIP:
-            continue
         info_f = f.parent / "run_info.json"
         info = load_json(info_f) if info_f.exists() else {}
         runs.append((exp, int(f.parent.name[4:]), load_json(f), info))
