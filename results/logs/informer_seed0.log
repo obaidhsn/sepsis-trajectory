@@ -1,0 +1,15 @@
+informer: 162,567 trainable parameters on cuda
+epoch 1: loss=1.9775 val_auprc=0.0561 (26s)
+epoch 2: loss=1.6846 val_auprc=0.0629 (23s)
+epoch 3: loss=1.4984 val_auprc=0.0609 (23s)
+epoch 4: loss=1.3638 val_auprc=0.0617 (23s)
+epoch 5: loss=1.2702 val_auprc=0.0597 (23s)
+epoch 6: loss=1.2035 val_auprc=0.0577 (31s)
+epoch 7: loss=1.1378 val_auprc=0.0654 (34s)
+epoch 8: loss=1.0922 val_auprc=0.0594 (32s)
+epoch 9: loss=1.0531 val_auprc=0.0628 (34s)
+epoch 10: loss=1.0215 val_auprc=0.0619 (33s)
+epoch 11: loss=1.0049 val_auprc=0.0625 (32s)
+epoch 12: loss=0.9839 val_auprc=0.0598 (30s)
+early stopping
+done in 469s -> results_mid_eval/informer/seed0

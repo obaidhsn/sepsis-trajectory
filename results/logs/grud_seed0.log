@@ -1,0 +1,10 @@
+grud: 84,689 trainable parameters on cuda
+epoch 1: loss=1.9409 val_auprc=0.0532 (30s)
+epoch 2: loss=1.7154 val_auprc=0.0604 (29s)
+epoch 3: loss=1.5681 val_auprc=0.0517 (29s)
+epoch 4: loss=1.4542 val_auprc=0.0525 (29s)
+epoch 5: loss=1.3635 val_auprc=0.0492 (29s)
+epoch 6: loss=1.3001 val_auprc=0.0561 (28s)
+epoch 7: loss=1.2272 val_auprc=0.0583 (29s)
+early stopping
+done in 287s -> results_mid_eval/grud/seed0

@@ -1,0 +1,12 @@
+gat_transformer: 159,855 trainable parameters on cuda
+epoch 1: loss=2.0214 val_auprc=0.0698 (22s)
+epoch 2: loss=1.7637 val_auprc=0.0618 (21s)
+epoch 3: loss=1.6090 val_auprc=0.0579 (21s)
+epoch 4: loss=1.4804 val_auprc=0.0704 (21s)
+epoch 5: loss=1.3829 val_auprc=0.0567 (21s)
+epoch 6: loss=1.3042 val_auprc=0.0653 (21s)
+epoch 7: loss=1.2316 val_auprc=0.0606 (21s)
+epoch 8: loss=1.1800 val_auprc=0.0562 (21s)
+epoch 9: loss=1.1311 val_auprc=0.0605 (21s)
+early stopping
+done in 276s -> results_mid_eval/gat_transformer/seed0

@@ -1,0 +1,18 @@
+linear: 100,842 trainable parameters on cuda
+epoch 1: loss=0.5651 neg_val_vitals_mae=-0.5281 (23s)
+epoch 2: loss=0.5336 neg_val_vitals_mae=-0.5293 (18s)
+epoch 3: loss=0.5311 neg_val_vitals_mae=-0.5241 (15s)
+epoch 4: loss=0.5298 neg_val_vitals_mae=-0.5337 (16s)
+epoch 5: loss=0.5298 neg_val_vitals_mae=-0.5233 (15s)
+epoch 6: loss=0.5286 neg_val_vitals_mae=-0.5242 (21s)
+epoch 7: loss=0.5291 neg_val_vitals_mae=-0.5234 (31s)
+epoch 8: loss=0.5301 neg_val_vitals_mae=-0.5328 (31s)
+epoch 9: loss=0.5288 neg_val_vitals_mae=-0.5234 (31s)
+epoch 10: loss=0.5300 neg_val_vitals_mae=-0.5223 (26s)
+epoch 11: loss=0.5293 neg_val_vitals_mae=-0.5223 (16s)
+epoch 12: loss=0.5299 neg_val_vitals_mae=-0.5353 (15s)
+epoch 13: loss=0.5278 neg_val_vitals_mae=-0.5242 (15s)
+epoch 14: loss=0.5288 neg_val_vitals_mae=-0.5326 (15s)
+epoch 15: loss=0.5288 neg_val_vitals_mae=-0.5236 (15s)
+early stopping
+done in 390s -> results_mid_eval/linear/seed0

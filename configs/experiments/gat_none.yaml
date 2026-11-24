@@ -1,4 +1,0 @@
-# Ablation (i): graph type = none
-base: gat_transformer.yaml
-model:
-  graph: none

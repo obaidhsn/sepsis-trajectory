@@ -1,12 +1,14 @@
 # Data (never commit PhysioNet data)
 data/raw/*
+data/processed
 data/processed/*
 !data/raw/.gitkeep
-!data/processed/.gitkeep
 
 # Experiment outputs
-results/*
-!results/.gitkeep
+# Results are tracked, except checkpoints and large arrays
+results/**/*.pt
+results/**/*.npz
+results/**/adjacency.npy
 checkpoints/
 runs/
 wandb/

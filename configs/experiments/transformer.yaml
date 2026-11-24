@@ -1,5 +1,5 @@
 # Primary baseline. hidden_dim is chosen so the parameter count matches
-# gat_transformer.yaml (check with: python scripts/count_params.py).
+# gat_transformer.yaml.
 base: ../default.yaml
 model:
   name: transformer

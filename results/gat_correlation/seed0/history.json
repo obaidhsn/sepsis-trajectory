@@ -1,0 +1,68 @@
+{
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06849611191739949,
+  "best_epoch": 1,
+  "epochs_run": 6,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 2.0210119210593867,
+      "train_loss_vitals": 0.6477169317208217,
+      "train_loss_risk": 1.0753934431033703,
+      "train_loss_onset": 0.5958030945348486,
+      "val_auprc": 0.06849611191739949,
+      "train_seconds": 14.946222066879272,
+      "seconds": 21.555514574050903
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.7686880418293005,
+      "train_loss_vitals": 0.5819543646665069,
+      "train_loss_risk": 0.9172040045155513,
+      "train_loss_onset": 0.5390593465119865,
+      "val_auprc": 0.06539459023445329,
+      "train_seconds": 14.438898086547852,
+      "seconds": 21.120299816131592
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.609340650573717,
+      "train_loss_vitals": 0.5676183663507126,
+      "train_loss_risk": 0.7912638102183334,
+      "train_loss_onset": 0.5009169567965276,
+      "val_auprc": 0.059068652322488015,
+      "train_seconds": 14.44114351272583,
+      "seconds": 21.157878637313843
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.4739173566045811,
+      "train_loss_vitals": 0.5622701841815115,
+      "train_loss_risk": 0.6768597493586701,
+      "train_loss_onset": 0.46957485549826816,
+      "val_auprc": 0.0632825616472862,
+      "train_seconds": 14.443809270858765,
+      "seconds": 21.196403741836548
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.379770274272397,
+      "train_loss_vitals": 0.5590496803261671,
+      "train_loss_risk": 0.5979832310236157,
+      "train_loss_onset": 0.4454747292330591,
+      "val_auprc": 0.055699975670066536,
+      "train_seconds": 14.435415267944336,
+      "seconds": 20.945847034454346
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.295752967864963,
+      "train_loss_vitals": 0.5577007843376688,
+      "train_loss_risk": 0.5272608088134237,
+      "train_loss_onset": 0.4215827549064985,
+      "val_auprc": 0.05724268513668569,
+      "train_seconds": 16.645495176315308,
+      "seconds": 23.776643991470337
+    }
+  ]
+}

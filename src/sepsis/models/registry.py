@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from ..constants import DYNAMIC, STATIC, VITALS
+from .autoformer import Autoformer
 from .baselines import LinearForecaster, MLPMultiTask, Persistence
 from .gat_transformer import GATTransformer
 from .grud import GRUD
+from .informer import Informer
 from .transformer import TemporalTransformer
 
 MODEL_REGISTRY = {
@@ -14,6 +16,8 @@ MODEL_REGISTRY = {
     "mlp": MLPMultiTask,
     "grud": GRUD,
     "transformer": TemporalTransformer,
+    "informer": Informer,
+    "autoformer": Autoformer,
     "gat_transformer": GATTransformer,
 }
 

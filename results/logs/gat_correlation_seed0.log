@@ -1,0 +1,9 @@
+gat_correlation: 159,855 trainable parameters on cuda
+epoch 1: loss=2.0210 val_auprc=0.0685 (22s)
+epoch 2: loss=1.7687 val_auprc=0.0654 (21s)
+epoch 3: loss=1.6093 val_auprc=0.0591 (21s)
+epoch 4: loss=1.4739 val_auprc=0.0633 (21s)
+epoch 5: loss=1.3798 val_auprc=0.0557 (21s)
+epoch 6: loss=1.2958 val_auprc=0.0572 (24s)
+early stopping
+done in 223s -> results_mid_eval/gat_correlation/seed0

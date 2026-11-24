@@ -1,0 +1,7 @@
+# Autoformer encoder (series decomposition + auto-correlation), same inputs and heads as the Transformer.
+base: ../default.yaml
+model:
+  name: autoformer
+  hidden_dim: 72
+  factor: 1
+  moving_avg: 7

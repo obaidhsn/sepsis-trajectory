@@ -1,0 +1,78 @@
+{
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06037129455418127,
+  "best_epoch": 2,
+  "epochs_run": 7,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 1.9409188536090072,
+      "train_loss_vitals": 0.5576292489180557,
+      "train_loss_risk": 1.0844345767163468,
+      "train_loss_onset": 0.5977100657950921,
+      "val_auprc": 0.05316577162309064,
+      "train_seconds": 23.14304280281067,
+      "seconds": 29.689623832702637
+    },
+    {
+      "epoch": 2,
+      "train_loss": 1.7154258809335279,
+      "train_loss_vitals": 0.526946898463776,
+      "train_loss_risk": 0.919261202189681,
+      "train_loss_onset": 0.5384355637362329,
+      "val_auprc": 0.06037129455418127,
+      "train_seconds": 22.21337628364563,
+      "seconds": 28.624095678329468
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.5680763079895643,
+      "train_loss_vitals": 0.5260196748465882,
+      "train_loss_risk": 0.7903767553146525,
+      "train_loss_onset": 0.5033597612677416,
+      "val_auprc": 0.05166024443192731,
+      "train_seconds": 22.298861265182495,
+      "seconds": 28.60489773750305
+    },
+    {
+      "epoch": 4,
+      "train_loss": 1.4541568749751332,
+      "train_loss_vitals": 0.5263085178435378,
+      "train_loss_risk": 0.6900184179389879,
+      "train_loss_onset": 0.4756598701273781,
+      "val_auprc": 0.052470858339467935,
+      "train_seconds": 22.27592945098877,
+      "seconds": 28.57290506362915
+    },
+    {
+      "epoch": 5,
+      "train_loss": 1.3634938071506697,
+      "train_loss_vitals": 0.5273978274520719,
+      "train_loss_risk": 0.6109780433652244,
+      "train_loss_onset": 0.450235870443483,
+      "val_auprc": 0.04918656049496137,
+      "train_seconds": 22.34310817718506,
+      "seconds": 28.639344930648804
+    },
+    {
+      "epoch": 6,
+      "train_loss": 1.300080874885166,
+      "train_loss_vitals": 0.5275317885735954,
+      "train_loss_risk": 0.5594184867124574,
+      "train_loss_onset": 0.4262612030624708,
+      "val_auprc": 0.056098849966837755,
+      "train_seconds": 22.18494153022766,
+      "seconds": 28.450550317764282
+    },
+    {
+      "epoch": 7,
+      "train_loss": 1.2271662624437052,
+      "train_loss_vitals": 0.5280438165575743,
+      "train_loss_risk": 0.4963527727561141,
+      "train_loss_onset": 0.40553933932556774,
+      "val_auprc": 0.058339106239362226,
+      "train_seconds": 22.787184953689575,
+      "seconds": 29.083017349243164
+    }
+  ]
+}

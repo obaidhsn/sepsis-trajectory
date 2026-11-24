@@ -1,0 +1,21 @@
+{
+  "experiment": "gat_clinical_prior",
+  "seed": 0,
+  "config_file": "configs/experiments/gat_clinical_prior.yaml",
+  "overrides": [],
+  "command": "python scripts/train.py --config configs/experiments/gat_clinical_prior.yaml --seed 0 --name gat_clinical_prior",
+  "started_utc": "2026-11-24T11:24:32+00:00",
+  "device": "cuda",
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "torch": "2.15.0+cu132",
+  "numpy": "2.5.5",
+  "python": "3.12.3",
+  "n_params": 159855,
+  "best_epoch": 1,
+  "epochs_run": 6,
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06875863725409083,
+  "train_seconds": 137.4,
+  "total_seconds": 223.8,
+  "finished_utc": "2026-11-24T11:28:16+00:00"
+}
