@@ -59,14 +59,32 @@ L = λ_v·L_vitals + λ_r·L_risk + λ_t·L_time
 
 - L_vitals: MAE over future values that were actually measured
 - L_risk: BCE with `risk_pos_weight` (default 10)
-- L_time: cross-entropy over onset buckets
+- L_time: cross-entropy over onset buckets, **class-weighted** (`onset_class_weights: auto`). The weights are
+  the balanced inverse frequencies n / (K·n_k) of the buckets in the training windows, computed at the start
+  of each run and saved in `config.yaml` and `run_info.json`. Without them over 90% of windows sit in the
+  ">24 h / never" bucket and the head learned to predict only that bucket (macro-F1 ≈ 0.25, the
+  mid-evaluation runs).
 
 The λ's and the positive weight are tuned on validation.
 
 ## Training (`src/sepsis/training/trainer.py`)
 
-AdamW, gradient clipping, early stopping on validation AUPRC (on vitals MAE for forecast-only models),
-best checkpoint restored. Results are averaged over seeds 0, 1 and 2.
+AdamW and gradient clipping. **Per-task model selection** (`train.selection: per_task`, the default):
+
+- After every epoch the validation set is scored on each task: risk AUPRC, vitals MAE, onset macro-F1.
+- A weight snapshot is kept at each task's best epoch (`best_risk.pt`, `best_vitals.pt`, `best_onset.pt`).
+  At test time each head's output comes from its own snapshot (`training.trainer.PerTaskSelection`);
+  thresholds are still chosen on validation with the risk snapshot.
+- Training stops when **no** task has improved by more than `train.min_delta` (0.001) for `train.patience`
+  (5) epochs, up to `train.epochs` (30).
+
+Why: in the mid-evaluation runs validation AUPRC peaked in epoch 1–6 and then fluctuated between about
+0.05 and 0.07 from epoch to epoch while the training loss kept falling. Stopping and choosing one
+checkpoint on AUPRC alone therefore also froze the vitals and onset heads at an early, noisy epoch.
+The original protocol is still available as `--override train.selection=risk_auprc`.
+
+Per-task selection uses up to three snapshots of the same architecture, so it is a selection rule, not a
+larger model. The parameter count reported is that of one model.
 
 ## Ablations
 
@@ -77,7 +95,7 @@ best checkpoint restored. Results are averaged over seeds 0, 1 and 2.
 
 ## Open decisions
 
-- **Hours after onset.** `SepsisLabel` stays 1 after onset, so the risk target means
+- **Hours after onset.** (still open) `SepsisLabel` stays 1 after onset, so the risk target means
   "onset within 6 h, *or already septic*". The ≤6 h onset bucket currently also contains hours at
   or after onset (`data/targets.py`). Options are to keep this, to add a separate "post-onset" bucket,
   or to drop post-onset hours from the onset loss. Decide and state it in the report.

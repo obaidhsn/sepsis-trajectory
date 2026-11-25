@@ -37,6 +37,8 @@ COLUMNS = [
     ("Utility@1FA", "early_warning@fixed_fa.utility", 3),
     ("Detect@1FA", "early_warning@fixed_fa.detection_rate", 3),
     ("Onset macro-F1", "onset.macro_f1", 3),
+    ("Onset bal. acc.", "onset.balanced_accuracy", 3),
+    ("Onset macro-F1 (septic pts)", "onset_septic.macro_f1", 3),
     ("Vitals MAE", "vitals.mae", 3),
     ("Vitals RMSE", "vitals.rmse", 3),
     ("Vitals MAE pre-onset", "vitals_pre_onset.mae", 3),
@@ -94,6 +96,8 @@ def main():
                 continue
             row = {"experiment": exp, "seed": seed, "split": split, "n_params": m.get("n_params"),
                    "best_epoch": info.get("best_epoch"), "epochs_run": info.get("epochs_run"),
+                   "selection": info.get("selection"),
+                   **{f"best_epoch_{k}": v for k, v in (info.get("best_epoch_per_task") or {}).items()},
                    "train_seconds": info.get("train_seconds")}
             row.update(flatten(m[split]))
             flat_rows.append(row)

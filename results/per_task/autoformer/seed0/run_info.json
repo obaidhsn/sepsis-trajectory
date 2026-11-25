@@ -1,0 +1,36 @@
+{
+  "experiment": "autoformer",
+  "seed": 0,
+  "config_file": "configs/experiments/autoformer.yaml",
+  "overrides": [
+    "paths.results_dir=results/per_task"
+  ],
+  "command": "python3 scripts/train.py --config configs/experiments/autoformer.yaml --seed 0 --name autoformer --override paths.results_dir=results/per_task",
+  "started_utc": "2026-11-25T06:00:34+00:00",
+  "device": "mps",
+  "gpu": null,
+  "torch": "2.9.0",
+  "numpy": "2.2.0",
+  "python": "3.13.13",
+  "inputs_clipped_to_train_range": 211773,
+  "onset_bucket_counts_train": [
+    15327,
+    5448,
+    5920,
+    117257
+  ],
+  "n_params": 168455,
+  "best_epoch": 3,
+  "epochs_run": 10,
+  "selection": "per_task",
+  "best_epoch_per_task": {
+    "risk": 3,
+    "vitals": 5,
+    "onset": 5
+  },
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06716495626865195,
+  "train_seconds": 548.8,
+  "total_seconds": 767.7,
+  "finished_utc": "2026-11-25T06:13:22+00:00"
+}

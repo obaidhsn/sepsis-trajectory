@@ -1,0 +1,26 @@
+gat_transformer: 159,855 trainable parameters on mps
+onset buckets in training windows [15327, 5448, 5920, 117257] -> weights [2.35, 6.61, 6.08, 0.31]
+epoch 1: loss=2.3350 val_auprc=0.0714 val_vitals_mae=0.5650 val_onset_macro_f1=0.2504 best[risk, vitals, onset] (40s)
+epoch 2: loss=2.0792 val_auprc=0.0618 val_vitals_mae=0.5406 val_onset_macro_f1=0.2515 best[vitals, onset] (39s)
+epoch 3: loss=1.9108 val_auprc=0.0603 val_vitals_mae=0.5405 val_onset_macro_f1=0.2568 best[onset] (39s)
+epoch 4: loss=1.7610 val_auprc=0.0584 val_vitals_mae=0.5333 val_onset_macro_f1=0.2559 best[vitals] (39s)
+epoch 5: loss=1.6498 val_auprc=0.0574 val_vitals_mae=0.5311 val_onset_macro_f1=0.2483 best[vitals] (39s)
+epoch 6: loss=1.5676 val_auprc=0.0656 val_vitals_mae=0.5306 val_onset_macro_f1=0.2596 best[onset] (39s)
+epoch 7: loss=1.4827 val_auprc=0.0577 val_vitals_mae=0.5263 val_onset_macro_f1=0.2626 best[vitals, onset] (39s)
+epoch 8: loss=1.4002 val_auprc=0.0588 val_vitals_mae=0.5279 val_onset_macro_f1=0.2428 best[-] (39s)
+epoch 9: loss=1.3471 val_auprc=0.0630 val_vitals_mae=0.5296 val_onset_macro_f1=0.2582 best[-] (39s)
+epoch 10: loss=1.3038 val_auprc=0.0609 val_vitals_mae=0.5254 val_onset_macro_f1=0.2620 best[-] (39s)
+epoch 11: loss=1.2605 val_auprc=0.0661 val_vitals_mae=0.5268 val_onset_macro_f1=0.2710 best[onset] (39s)
+epoch 12: loss=1.2300 val_auprc=0.0576 val_vitals_mae=0.5237 val_onset_macro_f1=0.2664 best[vitals] (39s)
+epoch 13: loss=1.1958 val_auprc=0.0639 val_vitals_mae=0.5236 val_onset_macro_f1=0.2621 best[-] (39s)
+epoch 14: loss=1.1683 val_auprc=0.0635 val_vitals_mae=0.5238 val_onset_macro_f1=0.2715 best[-] (39s)
+epoch 15: loss=1.1444 val_auprc=0.0657 val_vitals_mae=0.5233 val_onset_macro_f1=0.2697 best[-] (39s)
+epoch 16: loss=1.1228 val_auprc=0.0675 val_vitals_mae=0.5204 val_onset_macro_f1=0.2750 best[vitals, onset] (39s)
+epoch 17: loss=1.1070 val_auprc=0.0662 val_vitals_mae=0.5191 val_onset_macro_f1=0.2825 best[vitals, onset] (39s)
+epoch 18: loss=1.0856 val_auprc=0.0632 val_vitals_mae=0.5239 val_onset_macro_f1=0.2723 best[-] (39s)
+epoch 19: loss=1.0758 val_auprc=0.0647 val_vitals_mae=0.5216 val_onset_macro_f1=0.2683 best[-] (39s)
+epoch 20: loss=1.0551 val_auprc=0.0636 val_vitals_mae=0.5235 val_onset_macro_f1=0.2643 best[-] (39s)
+epoch 21: loss=1.0477 val_auprc=0.0616 val_vitals_mae=0.5210 val_onset_macro_f1=0.2721 best[-] (39s)
+epoch 22: loss=1.0323 val_auprc=0.0661 val_vitals_mae=0.5222 val_onset_macro_f1=0.2814 best[-] (39s)
+early stopping: no task improved for 5 epochs
+done in 979s -> results/per_task/gat_transformer/seed0

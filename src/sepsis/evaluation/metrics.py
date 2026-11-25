@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import numpy as np
-from sklearn.metrics import (average_precision_score, brier_score_loss, f1_score,
-                             roc_auc_score)
+from sklearn.metrics import (average_precision_score, balanced_accuracy_score, brier_score_loss,
+                             f1_score, roc_auc_score)
 
 from ..constants import VITALS
 
@@ -65,7 +65,10 @@ BUCKET_MIDPOINTS = (3.0, 9.0, 18.0, 36.0)
 def onset_metrics(y, prob) -> dict:
     y = np.asarray(y)
     pred = prob.argmax(-1)
-    out = {"macro_f1": float(f1_score(y, pred, average="macro")),
+    labels = list(range(prob.shape[1]))
+    out = {"macro_f1": float(f1_score(y, pred, labels=labels, average="macro", zero_division=0)),
+           "f1_per_bucket": [float(x) for x in f1_score(y, pred, labels=labels, average=None, zero_division=0)],
+           "balanced_accuracy": float(balanced_accuracy_score(y, pred)) if len(np.unique(y)) > 1 else float("nan"),
            "accuracy": float((pred == y).mean())}
     mids = np.asarray(BUCKET_MIDPOINTS[: prob.shape[1]])
     septic = y < prob.shape[1] - 1

@@ -6,6 +6,7 @@
 Outputs in results/<experiment>/seed<k>/:
     config.yaml, run_info.json, best.pt, history.json, thresholds.json,
     metrics.json, predictions_{val,test_A,test_B}.npz
+    With per-task selection there is also best_<task>.pt, one snapshot per head.
 """
 import argparse
 import platform
@@ -27,7 +28,8 @@ from sepsis.evaluation import (evaluate_predictions, select_threshold_fixed_fa,
                                select_threshold_utility)
 from sepsis.graphs import build_adjacency
 from sepsis.models import build_model, count_parameters
-from sepsis.training import Trainer, predict
+from sepsis.data.targets import onset_bucket
+from sepsis.training import Trainer, onset_class_weights_from_counts, predict
 from sepsis.utils import load_json, save_json, set_seed
 
 
@@ -38,6 +40,8 @@ def main():
     ap.add_argument("--name", default=None, help="experiment name (default: config file stem)")
     ap.add_argument("--processed", default=None, help="override paths.processed_dir")
     ap.add_argument("--override", nargs="*", default=[])
+    ap.add_argument("--eval-only", action="store_true",
+                    help="skip training; load the saved best_<task>.pt snapshots of this run and re-evaluate")
     a = ap.parse_args()
 
     cfg = load_config(a.config, a.override)
@@ -49,7 +53,12 @@ def main():
     set_seed(seed)
     device = cfg["train"]["device"]
     if device == "auto":
-        device = "cuda" if torch.cuda.is_available() else "cpu"
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"  # Apple-silicon GPU
+        else:
+            device = "cpu"
 
     name = a.name or Path(a.config).stem
     out_dir = Path(cfg["paths"]["results_dir"]) / name / f"seed{seed}"
@@ -58,6 +67,7 @@ def main():
         yaml.safe_dump(cfg, f)
 
     started = time.time()
+    previous = load_json(out_dir / "run_info.json") if a.eval_only else {}
     run_info = {
         "experiment": name, "seed": seed, "config_file": a.config, "overrides": a.override,
         "command": " ".join([Path(sys.executable).name] + sys.argv),
@@ -66,10 +76,24 @@ def main():
         "gpu": torch.cuda.get_device_name(0) if device == "cuda" else None,
         "torch": torch.__version__, "numpy": np.__version__, "python": platform.python_version(),
     }
+    if a.eval_only:  # keep the training run's metadata, record the re-evaluation separately
+        run_info = {**previous, "re_evaluated": {k: run_info[k] for k in ("command", "started_utc", "device")}}
     save_json(run_info, out_dir / "run_info.json")
 
     patients, splits = load_processed(cfg["paths"]["processed_dir"])
     d = cfg["data"]
+    if d.get("clip_inputs", True):
+        # Clip every normalised variable to the range seen in the training patients. Training data is
+        # unchanged; val/test values outside that range (e.g. data-entry errors such as an FiO2 of
+        # thousands at Hospital B) can otherwise blow up models without input normalisation.
+        lo = np.min([patients[p]["x"].min(0) for p in splits["train"]], axis=0)
+        hi = np.max([patients[p]["x"].max(0) for p in splits["train"]], axis=0)
+        n_clipped = 0
+        for rec in patients.values():
+            n_clipped += int(((rec["x"] < lo) | (rec["x"] > hi)).sum())
+            np.clip(rec["x"], lo, hi, out=rec["x"])
+        run_info["inputs_clipped_to_train_range"] = n_clipped
+        print(f"clipped {n_clipped:,} input values outside the training range")
     adjacency = None
     if cfg["model"]["name"] == "gat_transformer":
         adjacency = build_adjacency(cfg["model"].get("graph", "learned"),
@@ -85,12 +109,29 @@ def main():
     seq = {s: PatientSequenceDataset(patients, splits[s], d["lookback"], d["horizon"], d["onset_edges"])
            for s in ("val", "test_A", "test_B")}
 
+    # Onset class weights: "auto" = balanced weights from the training windows' bucket counts.
+    loss_cfg = cfg["train"]["loss"]
+    if loss_cfg.get("onset_class_weights") == "auto":
+        k = len(d["onset_edges"]) + 1
+        counts = np.bincount([onset_bucket(t, patients[pid]["t_sepsis"], d["onset_edges"])
+                              for pid, t in train_ds.index], minlength=k)
+        loss_cfg["onset_class_weights"] = onset_class_weights_from_counts(counts)
+        run_info["onset_bucket_counts_train"] = counts.tolist()
+        print(f"onset buckets in training windows {counts.tolist()} -> weights "
+              f"{[round(w, 2) for w in loss_cfg['onset_class_weights']]}")
+        with open(out_dir / "config.yaml", "w") as f:
+            yaml.safe_dump(cfg, f)
+
     trainer = Trainer(model, cfg, out_dir, device)
-    history = trainer.fit(train_ds, seq["val"])
-    save_json(history, out_dir / "history.json")
+    if a.eval_only:
+        history = load_json(out_dir / "history.json")
+        trainer.load_selected(history["best_epoch_per_task"])
+    else:
+        history = trainer.fit(train_ds, seq["val"])
+        save_json(history, out_dir / "history.json")
     train_seconds = time.time() - started
 
-    preds = {s: predict(model, ds, cfg["train"]["eval_batch_size"], device) for s, ds in seq.items()}
+    preds = {s: predict(trainer.selected, ds, cfg["train"]["eval_batch_size"], device) for s, ds in seq.items()}
 
     # Thresholds chosen on validation only, then frozen.
     thresholds = {}
@@ -113,9 +154,10 @@ def main():
     save_json(metrics, out_dir / "metrics.json")
 
     run_info.update(n_params=n_params, best_epoch=history["best_epoch"], epochs_run=history["epochs_run"],
+                    selection=history["selection"], best_epoch_per_task=history["best_epoch_per_task"],
                     monitor=history["monitor"], best_val_monitor=history["best_val_monitor"],
-                    train_seconds=round(train_seconds, 1),
-                    total_seconds=round(time.time() - started, 1),
+                    train_seconds=previous.get("train_seconds") if a.eval_only else round(train_seconds, 1),
+                    total_seconds=previous.get("total_seconds") if a.eval_only else round(time.time() - started, 1),
                     finished_utc=datetime.now(timezone.utc).isoformat(timespec="seconds"))
     save_json(run_info, out_dir / "run_info.json")
     print(f"done in {run_info['total_seconds']:.0f}s -> {out_dir}")

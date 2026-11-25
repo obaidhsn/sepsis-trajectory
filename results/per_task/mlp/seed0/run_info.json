@@ -1,0 +1,36 @@
+{
+  "experiment": "mlp",
+  "seed": 0,
+  "config_file": "configs/experiments/mlp.yaml",
+  "overrides": [
+    "paths.results_dir=results/per_task"
+  ],
+  "command": "python3 scripts/train.py --config configs/experiments/mlp.yaml --seed 0 --name mlp --override paths.results_dir=results/per_task",
+  "started_utc": "2026-11-25T05:17:38+00:00",
+  "device": "mps",
+  "gpu": null,
+  "torch": "2.9.0",
+  "numpy": "2.2.0",
+  "python": "3.13.13",
+  "inputs_clipped_to_train_range": 211773,
+  "onset_bucket_counts_train": [
+    15327,
+    5448,
+    5920,
+    117257
+  ],
+  "n_params": 380207,
+  "best_epoch": 1,
+  "epochs_run": 21,
+  "selection": "per_task",
+  "best_epoch_per_task": {
+    "risk": 1,
+    "vitals": 3,
+    "onset": 16
+  },
+  "monitor": "val_auprc",
+  "best_val_monitor": 0.06977744067654548,
+  "train_seconds": 243.0,
+  "total_seconds": 281.9,
+  "finished_utc": "2026-11-25T05:22:20+00:00"
+}

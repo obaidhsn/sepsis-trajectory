@@ -40,7 +40,8 @@ patients from two hospitals, 1.55 M hourly rows of vitals, labs and demographics
 
 Every model gets the same inputs for a 24 h lookback window: the 33 normalised variables (7 vitals and 26
 labs), a missingness mask, log time since each variable was last measured, a padding flag, and static
-features (age, gender, ICU unit, time since hospital admission, hours in ICU so far). During training each
+features (age, gender, ICU unit, time since hospital admission, hours in ICU so far). Inputs are clipped to the
+range seen in the training patients, which guards against data-entry errors at Hospital B. During training each
 patient contributes 8 random windows per epoch and septic patients 4× as many. Details: [docs/data.md](docs/data.md).
 
 ## Models
@@ -59,6 +60,13 @@ patient contributes 8 random windows per epoch and septic patients 4× as many. 
 | GAT + Temporal Transformer | `gat_correlation.yaml` | all | same model, graph from training-set correlations |
 
 All multi-task models share the same three prediction heads and loss, so differences come from the encoder.
+The onset loss is class-weighted (balanced inverse bucket frequencies), because most hours fall in the
+">24 h / never" bucket.
+
+**Model selection (since 2026-11-25).** Each head is taken from the epoch with its own best validation
+score (risk AUPRC, vitals MAE, onset macro-F1). Training stops when no head has improved for 5 epochs.
+Previously one checkpoint was chosen on AUPRC alone, which stopped every head after 1–6 epochs.
+`--override train.selection=risk_auprc` restores the old protocol.
 Informer and Autoformer use their encoders only (vitals come from the shared forecast head, not their
 decoders). Details: [docs/methodology.md](docs/methodology.md).
 
@@ -71,8 +79,8 @@ decoders). Details: [docs/methodology.md](docs/methodology.md).
 | Trajectory MAE | vitals forecast MAE over 7 vitals × 6 hours, clinical units, measured values only |
 | (time to alert) | onset-bucket macro-F1 |
 
-Alarm thresholds are chosen on the validation set and then frozen. Early stopping monitors validation
-AUPRC. Details: [docs/evaluation.md](docs/evaluation.md).
+Alarm thresholds are chosen on the validation set and then frozen. Onset is also reported per bucket, as
+balanced accuracy, and on septic patients only. Details: [docs/evaluation.md](docs/evaluation.md).
 
 ## Repository layout
 
@@ -98,18 +106,62 @@ sepsis-trajectory/
 ```bash
 python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-bash scripts/download_data.sh     # PhysioNet 2019 from Kaggle into data/raw/ (see docs/data.md)
-python scripts/preprocess.py      # once; writes data/processed/
-bash scripts/run_mid_eval.sh      # 10 models, seed 0 (~50 min on an RTX 4060 laptop GPU)
+SOURCE=physionet bash scripts/download_data.sh   # straight from PhysioNet, no account needed
+# or: bash scripts/download_data.sh              # Kaggle mirror, needs a Kaggle API token (docs/data.md)
+python scripts/preprocess.py      # once; writes data/processed/ (~1 min, ~2 GB RAM)
+OUT=results/per_task bash scripts/run_mid_eval.sh   # 10 models, seed 0 (~2.5 h on an M2 MacBook)
 ```
+
+Hardware: the device is picked automatically (CUDA, then Apple-silicon MPS, then CPU). An M2 MacBook with
+16 GB runs one model in 1–31 min (all ten in about 2.5 h), so no cloud GPU is needed for single-seed runs.
+A 3-seed grid (about 7.5 h on the M2) is quicker on a CUDA GPU or Kaggle.
 
 One model on its own: `python scripts/train.py --config configs/experiments/gat_transformer.yaml --seed 0`.
 Each run writes `config.yaml`, `run_info.json`, `history.json`, `thresholds.json` and `metrics.json` to
-`results/<model>/seed0/`; `run_mid_eval.sh` skips runs that are already done.
+`results/<model>/seed0/`, plus one weight snapshot per head (`best_<task>.pt`, not committed).
+`run_mid_eval.sh` skips runs that are already done. `--eval-only` re-evaluates a finished run from its
+saved snapshots without retraining.
 
-## Results so far (mid-project evaluation)
+## Results so far
 
-**These are single-seed results (seed 0).** Differences of a few thousandths are within run-to-run noise.
+### Latest: all models with per-task selection and onset fix (2026-11-25)
+
+Seed 0, Apple M2 (MPS). Full write-up, Hospital B table and comparison with the old protocol:
+[results/per_task/RESULTS.md](results/per_task/RESULTS.md).
+
+Hospital A test set (test_A); in brackets, Hospital B (test_B):
+
+| Model | Risk from epoch | AUROC | AUPRC | ECE | Utility | Utility@1FA | Onset macro-F1 | Onset error (h) | Vitals MAE |
+|---|--:|--:|--:|--:|--:|--:|--:|--:|--:|
+| Persistence | – | – | – | – | – | – | – | – | 6.437 (6.961) |
+| Linear | – | – | – | – | – | – | – | – | 6.000 (6.618) |
+| MLP | 1 | 0.766 (0.741) | 0.061 (0.037) | 0.375 | 0.337 (0.141) | 0.164 (0.048) | 0.250 | 12.3 | 6.450 (7.208) |
+| GRU-D | 8 | 0.729 (0.694) | 0.054 (0.034) | 0.095 | 0.245 (0.139) | 0.181 (0.130) | 0.261 | 12.8 | **5.803 (6.487)** |
+| Informer | 25 | 0.739 (0.687) | 0.064 (0.040) | 0.068 | 0.268 (0.160) | 0.213 (0.141) | **0.293** | 16.0 | 6.028 (6.832) |
+| Autoformer | 3 | 0.767 (0.765) | 0.057 (0.045) | 0.313 | **0.350** (0.222) | 0.076 (0.077) | 0.239 | **9.3** | 5.938 (6.598) |
+| Transformer | 24 | 0.737 (0.700) | 0.064 (0.042) | **0.064** | 0.243 (0.155) | 0.199 (0.148) | 0.283 | 16.5 | 5.919 (6.638) |
+| GAT + Transformer (learned) | 1 | **0.769 (0.785)** | **0.064 (0.061)** | 0.291 | 0.345 (**0.242**) | 0.180 (0.154) | 0.282 | 14.5 | 5.926 (6.675) |
+| GAT + Transformer (clinical prior) | 11 | 0.756 (0.731) | 0.062 (0.044) | 0.083 | 0.286 (0.120) | **0.240 (0.195)** | 0.282 | 15.6 | 5.870 (6.545) |
+| GAT + Transformer (correlation) | 1 | 0.768 (0.783) | 0.063 (0.058) | 0.290 | 0.324 (0.235) | 0.177 (0.155) | 0.281 | 15.2 | 5.894 (6.612) |
+
+- **Vitals:** the models that the old protocol stopped at epoch 1 gained most. The fixed-graph GATs went
+  from 6.46/6.42 to 5.87/5.89. GRU-D is still the best forecaster (5.80).
+- **Onset:** every model now predicts all four buckets. Error for septic hours fell from 17.5–19.3 h to
+  9.3–17.4 h, Autoformer lowest. No model separates neighbouring buckets well (best macro-F1 0.29).
+- **Risk:** results split by the epoch the risk head came from.
+  - Epoch 1–3 snapshots (MLP, Autoformer, learned and correlation GAT) rank best, with AUROC up to 0.785
+    on Hospital B, but are poorly calibrated.
+  - Later snapshots (GRU-D, Informer, Transformer, clinical-prior GAT) are well calibrated and mostly
+    best at one false alarm per day.
+  - Validation AUPRC is too noisy for the epoch choice to mean much.
+- **Graph question:** the fixed-graph GATs are slightly ahead of the matched Transformer on vitals MAE
+  and on utility at one false alarm per day. This is one seed, within seed noise, and the earlier 3-seed
+  run found that a GAT without edges does as well. Still no evidence for the graph.
+
+### Mid-project evaluation (old protocol, 2026-11-24)
+
+**These are single-seed results (seed 0)**, selected on validation AUPRC alone, without onset class
+weights or input clipping. Superseded by the run above; kept for reference. Differences of a few thousandths are within run-to-run noise.
 Full tables (including validation, per-vital and per-horizon errors) are in
 [results/RESULTS.md](results/RESULTS.md) and `results/tables/`.
 
@@ -160,4 +212,4 @@ threshold allowing 1 false-alarm hour per non-septic patient-day; Vitals MAE in 
 - **Vital-sign trajectories:** GRU-D and Autoformer forecast best; the attention models are close to the
   linear baseline.
 - **Training stops early.** Several models reach their best validation AUPRC after 1–3 epochs, so the
-  forecast heads are undertrained.
+  forecast heads are undertrained. Fixed by per-task selection (see the latest results above).

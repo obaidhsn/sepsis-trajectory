@@ -1,0 +1,21 @@
+clipped 211,773 input values outside the training range
+grud: 84,689 trainable parameters on mps
+onset buckets in training windows [15327, 5448, 5920, 117257] -> weights [2.35, 6.61, 6.08, 0.31]
+epoch 1: loss=2.2717 val_auprc=0.0520 val_vitals_mae=0.5056 val_onset_macro_f1=0.2488 best[risk, vitals, onset] (31s)
+epoch 2: loss=2.0331 val_auprc=0.0585 val_vitals_mae=0.5057 val_onset_macro_f1=0.2517 best[risk, onset] (30s)
+epoch 3: loss=1.8591 val_auprc=0.0582 val_vitals_mae=0.5075 val_onset_macro_f1=0.2557 best[onset] (30s)
+epoch 4: loss=1.7090 val_auprc=0.0557 val_vitals_mae=0.5080 val_onset_macro_f1=0.2489 best[-] (30s)
+epoch 5: loss=1.5894 val_auprc=0.0514 val_vitals_mae=0.5088 val_onset_macro_f1=0.2503 best[-] (30s)
+epoch 6: loss=1.5009 val_auprc=0.0555 val_vitals_mae=0.5099 val_onset_macro_f1=0.2628 best[onset] (31s)
+epoch 7: loss=1.4142 val_auprc=0.0539 val_vitals_mae=0.5109 val_onset_macro_f1=0.2510 best[-] (31s)
+epoch 8: loss=1.3639 val_auprc=0.0597 val_vitals_mae=0.5120 val_onset_macro_f1=0.2636 best[risk] (30s)
+epoch 9: loss=1.3078 val_auprc=0.0488 val_vitals_mae=0.5119 val_onset_macro_f1=0.2371 best[-] (30s)
+epoch 10: loss=1.2657 val_auprc=0.0579 val_vitals_mae=0.5124 val_onset_macro_f1=0.2659 best[onset] (30s)
+epoch 11: loss=1.2209 val_auprc=0.0577 val_vitals_mae=0.5132 val_onset_macro_f1=0.2686 best[onset] (30s)
+epoch 12: loss=1.1820 val_auprc=0.0581 val_vitals_mae=0.5118 val_onset_macro_f1=0.2529 best[-] (30s)
+epoch 13: loss=1.1607 val_auprc=0.0539 val_vitals_mae=0.5132 val_onset_macro_f1=0.2597 best[-] (31s)
+epoch 14: loss=1.1292 val_auprc=0.0571 val_vitals_mae=0.5130 val_onset_macro_f1=0.2548 best[-] (30s)
+epoch 15: loss=1.1092 val_auprc=0.0524 val_vitals_mae=0.5140 val_onset_macro_f1=0.2612 best[-] (31s)
+epoch 16: loss=1.0937 val_auprc=0.0583 val_vitals_mae=0.5151 val_onset_macro_f1=0.2663 best[-] (30s)
+early stopping: no task improved for 5 epochs
+done in 574s -> results/per_task/grud/seed0

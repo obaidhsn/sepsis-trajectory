@@ -1,0 +1,15 @@
+clipped 211,773 input values outside the training range
+autoformer: 168,455 trainable parameters on mps
+onset buckets in training windows [15327, 5448, 5920, 117257] -> weights [2.35, 6.61, 6.08, 0.31]
+epoch 1: loss=2.3888 val_auprc=0.0592 val_vitals_mae=0.5398 val_onset_macro_f1=0.2332 best[risk, vitals, onset] (56s)
+epoch 2: loss=2.2061 val_auprc=0.0595 val_vitals_mae=0.5206 val_onset_macro_f1=0.2301 best[vitals] (54s)
+epoch 3: loss=2.1288 val_auprc=0.0672 val_vitals_mae=0.5191 val_onset_macro_f1=0.2398 best[risk, vitals, onset] (55s)
+epoch 4: loss=2.0580 val_auprc=0.0673 val_vitals_mae=0.5201 val_onset_macro_f1=0.2362 best[-] (55s)
+epoch 5: loss=1.9982 val_auprc=0.0608 val_vitals_mae=0.5169 val_onset_macro_f1=0.2473 best[vitals, onset] (55s)
+epoch 6: loss=1.9433 val_auprc=0.0625 val_vitals_mae=0.5163 val_onset_macro_f1=0.2319 best[-] (55s)
+epoch 7: loss=1.8917 val_auprc=0.0558 val_vitals_mae=0.5201 val_onset_macro_f1=0.2337 best[-] (55s)
+epoch 8: loss=1.8388 val_auprc=0.0586 val_vitals_mae=0.5229 val_onset_macro_f1=0.2361 best[-] (55s)
+epoch 9: loss=1.7853 val_auprc=0.0642 val_vitals_mae=0.5250 val_onset_macro_f1=0.2385 best[-] (55s)
+epoch 10: loss=1.7480 val_auprc=0.0630 val_vitals_mae=0.5225 val_onset_macro_f1=0.2482 best[-] (55s)
+early stopping: no task improved for 5 epochs
+done in 768s -> results/per_task/autoformer/seed0
