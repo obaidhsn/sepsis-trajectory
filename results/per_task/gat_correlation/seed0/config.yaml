@@ -1,0 +1,54 @@
+data:
+  clip_inputs: true
+  horizon: 6
+  lookback: 24
+  min_prelabel_hours: 6
+  onset_edges:
+  - 6
+  - 12
+  - 24
+  septic_oversample: 4
+  split_seed: 0
+  windows_per_patient: 8
+eval:
+  fixed_false_alarm_rate: 1.0
+model:
+  dropout: 0.1
+  gat_heads: 4
+  gat_layers: 2
+  graph: correlation
+  hidden_dim: 64
+  n_heads: 4
+  n_layers: 2
+  name: gat_transformer
+paths:
+  processed_dir: data/processed
+  raw_dir: data/raw
+  results_dir: results/per_task
+train:
+  batch_size: 256
+  device: auto
+  epochs: 30
+  eval_batch_size: 1024
+  grad_clip: 1.0
+  loss:
+    lambda_onset: 0.5
+    lambda_risk: 1.0
+    lambda_vitals: 1.0
+    onset_class_weights:
+    - 2.348013309845371
+    - 6.605726872246696
+    - 6.079054054054054
+    - 0.3069155786008511
+    risk_pos_weight: 10.0
+  lr: 0.001
+  min_delta: 0.001
+  num_workers: 0
+  patience: 5
+  seed: 0
+  selection: per_task
+  tasks:
+  - vitals
+  - risk
+  - onset
+  weight_decay: 0.0001

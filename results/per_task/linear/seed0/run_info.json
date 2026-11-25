@@ -1,0 +1,34 @@
+{
+  "experiment": "linear",
+  "seed": 0,
+  "config_file": "configs/experiments/linear.yaml",
+  "overrides": [
+    "paths.results_dir=results/per_task"
+  ],
+  "command": "python3 scripts/train.py --config configs/experiments/linear.yaml --seed 0 --name linear --override paths.results_dir=results/per_task",
+  "started_utc": "2026-11-25T05:15:57+00:00",
+  "device": "mps",
+  "gpu": null,
+  "torch": "2.9.0",
+  "numpy": "2.2.0",
+  "python": "3.13.13",
+  "inputs_clipped_to_train_range": 211773,
+  "onset_bucket_counts_train": [
+    15327,
+    5448,
+    5920,
+    117257
+  ],
+  "n_params": 100842,
+  "best_epoch": 3,
+  "epochs_run": 8,
+  "selection": "per_task",
+  "best_epoch_per_task": {
+    "vitals": 3
+  },
+  "monitor": "val_vitals_mae",
+  "best_val_monitor": 0.5242446064949036,
+  "train_seconds": 68.0,
+  "total_seconds": 99.1,
+  "finished_utc": "2026-11-25T05:17:36+00:00"
+}

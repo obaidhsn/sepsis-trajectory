@@ -1,0 +1,4 @@
+clipped 211,773 input values outside the training range
+persistence: 0 trainable parameters on mps
+onset buckets in training windows [15327, 5448, 5920, 117257] -> weights [2.35, 6.61, 6.08, 0.31]
+done in 29s -> results/per_task/persistence/seed0

@@ -1,0 +1,13 @@
+clipped 211,773 input values outside the training range
+linear: 100,842 trainable parameters on mps
+onset buckets in training windows [15327, 5448, 5920, 117257] -> weights [2.35, 6.61, 6.08, 0.31]
+epoch 1: loss=0.5649 val_vitals_mae=0.5301 best[vitals] (8s)
+epoch 2: loss=0.5334 val_vitals_mae=0.5296 best[-] (8s)
+epoch 3: loss=0.5310 val_vitals_mae=0.5242 best[vitals] (8s)
+epoch 4: loss=0.5295 val_vitals_mae=0.5262 best[-] (8s)
+epoch 5: loss=0.5295 val_vitals_mae=0.5240 best[-] (8s)
+epoch 6: loss=0.5287 val_vitals_mae=0.5264 best[-] (8s)
+epoch 7: loss=0.5292 val_vitals_mae=0.5277 best[-] (8s)
+epoch 8: loss=0.5298 val_vitals_mae=0.5305 best[-] (8s)
+early stopping: no task improved for 5 epochs
+done in 99s -> results/per_task/linear/seed0

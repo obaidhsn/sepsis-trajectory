@@ -1,0 +1,10 @@
+{
+  "selection": null,
+  "monitor": null,
+  "best_val_monitor": null,
+  "best_epoch": 0,
+  "best_epoch_per_task": {},
+  "best_val_per_task": {},
+  "epochs_run": 0,
+  "history": []
+}

@@ -2,8 +2,8 @@
 
 > **Superseded in part (2026-11-25).** These runs chose one checkpoint on validation AUPRC alone, which
 > stopped the vitals and onset heads after 1–6 epochs. The onset head had no class weights and only ever
-> predicted ">24 h / never". Both are fixed. Re-runs of the Transformer and GAT + Transformer under the new
-> protocol are in [per_task/RESULTS.md](per_task/RESULTS.md); the other models have not been re-run yet.
+> predicted ">24 h / never". Both are fixed. All ten models were re-run under the new protocol (with
+> input clipping) on 2026-11-25: [per_task/RESULTS.md](per_task/RESULTS.md).
 
 **Single-seed numbers.** Every model below was trained once (seed 0) with the same data, splits, inputs,
 training loop, early stopping and threshold selection. Differences of a few thousandths in AUROC/AUPRC are
